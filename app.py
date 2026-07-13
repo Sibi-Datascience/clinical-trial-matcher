@@ -1,8 +1,8 @@
-    """
+"""
 Multi-Agent Clinical Trial Matcher — Streamlit front-end.
 
-This is the entry point Hugging Face Spaces will run. It calls the
-LangGraph pipeline (src/graph.py) which chains three agents:
+This is the entry point Streamlit Cloud (or Hugging Face Spaces) runs.
+It calls the LangGraph pipeline (src/graph.py) which chains three agents:
 Extractor -> Researcher -> Evaluator.
 """
 import os
@@ -38,7 +38,7 @@ with st.sidebar:
         "validated for clinical decision-making."
     )
     if not os.getenv("GROQ_API_KEY"):
-        st.error("GROQ_API_KEY is not set. Add it in your Space's Settings → Secrets.")
+        st.error("GROQ_API_KEY is not set. Add it in your app's Settings → Secrets.")
 
 # ---------------------------------------------------------------------------
 # Main
