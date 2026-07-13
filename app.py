@@ -1,4 +1,4 @@
-"""
+    """
 Multi-Agent Clinical Trial Matcher — Streamlit front-end.
 
 This is the entry point Hugging Face Spaces will run. It calls the
@@ -54,22 +54,23 @@ SAMPLE_NOTE = (
     "comorbidities."
 )
 
+if "case_note_input" not in st.session_state:
+    st.session_state["case_note_input"] = ""
+
 col1, col2 = st.columns([4, 1])
+with col2:
+    st.write("")
+    st.write("")
+    if st.button("Use sample note"):
+        st.session_state["case_note_input"] = SAMPLE_NOTE
+        st.rerun()
 with col1:
     case_note = st.text_area(
         "Patient case note",
         height=200,
         placeholder="Paste a de-identified patient case note here...",
+        key="case_note_input",
     )
-with col2:
-    st.write("")
-    st.write("")
-    if st.button("Use sample note"):
-        case_note = SAMPLE_NOTE
-        st.session_state["case_note"] = SAMPLE_NOTE
-
-if "case_note" in st.session_state and not case_note:
-    case_note = st.session_state["case_note"]
 
 run = st.button("🚀 Run Agent Team", type="primary", use_container_width=False)
 
