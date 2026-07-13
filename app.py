@@ -46,13 +46,40 @@ with st.sidebar:
 st.title("Multi-Agent Clinical Trial Matcher")
 st.caption("Patient case note → structured extraction → live trial search → eligibility scoring")
 
-SAMPLE_NOTE = (
-    "62-year-old female with Stage IIIB non-small cell lung cancer (adenocarcinoma), "
-    "EGFR exon 19 deletion positive, ECOG performance status 1. Previously treated with "
-    "carboplatin/pemetrexed, progressed after 4 cycles. No prior immunotherapy. "
-    "Currently residing in Boston, Massachusetts. No significant cardiac or renal "
-    "comorbidities."
-)
+SAMPLE_NOTES = {
+    "Lung cancer (NSCLC, EGFR+)": (
+        "62-year-old female with Stage IIIB non-small cell lung cancer (adenocarcinoma), "
+        "EGFR exon 19 deletion positive, ECOG performance status 1. Previously treated with "
+        "carboplatin/pemetrexed, progressed after 4 cycles. No prior immunotherapy. "
+        "Currently residing in Boston, Massachusetts. No significant cardiac or renal "
+        "comorbidities."
+    ),
+    "Breast cancer (HER2+)": (
+        "45-year-old female with Stage II invasive ductal carcinoma of the breast, "
+        "HER2-positive, ER-negative, PR-negative. ECOG performance status 0. Completed "
+        "neoadjuvant chemotherapy (docetaxel, carboplatin, trastuzumab, pertuzumab) with "
+        "partial response. Underwent lumpectomy. No prior history of cardiac disease. "
+        "Currently residing in Chicago, Illinois."
+    ),
+    "Type 2 diabetes": (
+        "58-year-old male with a 10-year history of type 2 diabetes mellitus, HbA1c 8.9%, "
+        "on metformin and insulin glargine, poorly controlled. BMI 33. History of mild "
+        "diabetic peripheral neuropathy. No history of diabetic ketoacidosis. Currently "
+        "residing in Austin, Texas. No known cardiovascular events."
+    ),
+    "Colorectal cancer (KRAS mutant)": (
+        "70-year-old male with Stage IV metastatic colorectal cancer, KRAS G12C mutation "
+        "positive, microsatellite stable (MSS). ECOG performance status 1. Liver metastases "
+        "present. Previously treated with FOLFOX and bevacizumab, progressed after 6 months. "
+        "Currently residing in Seattle, Washington."
+    ),
+    "Rheumatoid arthritis": (
+        "39-year-old female with a 6-year history of seropositive rheumatoid arthritis "
+        "(anti-CCP positive, RF positive), currently on methotrexate with inadequate "
+        "response, moderate-to-severe disease activity (DAS28 5.4). No prior biologic "
+        "therapy. Currently residing in Denver, Colorado."
+    ),
+}
 
 if "case_note_input" not in st.session_state:
     st.session_state["case_note_input"] = ""
@@ -60,9 +87,9 @@ if "case_note_input" not in st.session_state:
 col1, col2 = st.columns([4, 1])
 with col2:
     st.write("")
-    st.write("")
+    chosen_sample = st.selectbox("Sample note", list(SAMPLE_NOTES.keys()), label_visibility="collapsed")
     if st.button("Use sample note"):
-        st.session_state["case_note_input"] = SAMPLE_NOTE
+        st.session_state["case_note_input"] = SAMPLE_NOTES[chosen_sample]
         st.rerun()
 with col1:
     case_note = st.text_area(
