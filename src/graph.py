@@ -31,9 +31,17 @@ def run_pipeline(case_note: str) -> AgentState:
     """Convenience wrapper: run the full pipeline and return a clean AgentState."""
     app = build_graph()
     result = app.invoke(AgentState(case_note=case_note))
-    # LangGraph returns a dict-like object even when the schema is a Pydantic
-    # model, depending on version — normalize it here so callers always get
-    # a proper AgentState instance.
     if isinstance(result, AgentState):
         return result
     return AgentState(**result)
+
+
+def stream_pipeline(case_note: str):
+    """
+    Run the pipeline and yield the cumulative AgentState after every node
+    finishes (Extractor, then Researcher, then Evaluator). This lets a UI
+    show live, step-by-step progress instead of a single blocking call.
+    """
+    app = build_graph()
+    for state in app.stream(AgentState(case_note=case_note), stream_mode="values"):
+        yield state if isinstance(state, AgentState) else AgentState(**state)
